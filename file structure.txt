@@ -1,0 +1,59 @@
+ai_story_writer/
+├── app.py                              # Main Flask application
+├── professional_story_engine.py        # World-class story generation
+├── requirements.txt                    # All dependencies
+├── auto_publisher.py                   # Multi-platform publishing
+├── image_creator.py                    # All image types + explicit content
+├── audio_processor.py                  # Audiobooks + voice cloning
+├── video_generator.py                  # Videos for all platforms
+├── puzzle_maker.py                     # Puzzles, games, IQ tests
+├── map_generator.py                    # Maps of all types
+├── financial_tracker.py                # Sales, profits, taxes
+├── training_engine.py                  # Auto-learning from any file
+├── sync_manager.py                     # Codespaces + GitHub Pages sync
+├── account_manager.py                  # Auto-account creation
+├── secure_vault.py                     # Encrypted sensitive data
+├── browser_extension/
+│   ├── manifest.json
+│   ├── popup.html
+│   ├── popup.js
+│   ├── content.js
+│   └── background.js
+├── github_pages/
+│   ├── index.html
+│   ├── lm_engine.js
+│   └── sync_client.js
+├── templates/
+│   ├── dashboard.html
+│   ├── story_editor.html
+│   ├── audit_report.html
+│   └── financial_dashboard.html
+├── training_data/                      # Watched every 60 seconds
+│   └── README.txt
+├── config/
+│   ├── settings.json
+│   ├── platforms.json
+│   └── content_guidelines.json
+├── output/
+│   ├── stories/
+│   ├── images/
+│   ├── audio/
+│   ├── videos/
+│   ├── covers/
+│   ├── puzzles/
+│   └── maps/
+├── platforms/
+│   ├── amazon_kdp.py
+│   ├── google_play.py
+│   ├── apple_books.py
+│   ├── smashwords.py
+│   ├── gumroad.py
+│   └── shopify.py
+├── secure_vault/
+│   ├── personal_info.enc
+│   ├── financial_data.enc
+│   └── platform_keys.enc
+└── logs/
+    ├── training.log
+    ├── publishing.log
+    └── financial.log
