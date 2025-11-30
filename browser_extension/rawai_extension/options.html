@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { width: 600px; padding: 20px; font-family: Arial; background: #0f0f0f; color: white; }
+        .section { background: #1a1a1a; padding: 20px; margin: 10px 0; border-radius: 8px; }
+        button { background: #4F46E5; color: white; border: none; padding: 10px; margin: 5px; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>RawAI Creator Pro Settings</h2>
+    
+    <div class="section">
+        <h3>🔗 Connection Settings</h3>
+        <label>Auto-connect to pages: <input type="checkbox" id="autoConnect" checked></label>
+    </div>
+    
+    <div class="section">
+        <button onclick="saveSettings()">💾 Save Settings</button>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+</html>

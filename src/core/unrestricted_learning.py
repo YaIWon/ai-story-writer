@@ -1847,3 +1847,6 @@ if __name__ == "__main__":
     # Get comprehensive system status
     stats = advanced_learner.get_comprehensive_stats()
     print("Advanced System Stats:", json.dumps(stats, indent=2))
+
+    # Add this line at the VERY END of unrestricted_learning.py
+UnrestrictedLearning = AdvancedUnrestrictedLearning

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { width: 400px; padding: 20px; background: #0f0f0f; color: white; font-family: Arial; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .button-group { display: flex; gap: 10px; margin: 15px 0; }
+        button { flex: 1; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-connect { background: #10B981; color: white; }
+        .btn-sync { background: #4F46E5; color: white; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h3 style="margin: 0; color: #7E22CE;">🤖 RawAI Creator Pro</h3>
+        <p style="margin: 5px 0; font-size: 12px; color: #9CA3AF;">AI-Powered Web Automation</p>
+    </div>
+    
+    <div class="button-group">
+        <button class="btn-connect" onclick="connectToPage()">🔗 Connect</button>
+        <button class="btn-sync" onclick="syncWithBackend()">🔄 Sync</button>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
