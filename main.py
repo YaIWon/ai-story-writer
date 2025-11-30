@@ -11,7 +11,7 @@ from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
 from core.amoral_memory import AmoralMemory
-from core.unrestricted_learning import UnrestrictedLearning
+from core.unrestricted_learning import AdvancedUnrestrictedLearning
 from core.content_generator import ContentGenerator
 from processing.file_ingestor import FileIngestor
 from processing.data_analyzer import DataAnalyzer
