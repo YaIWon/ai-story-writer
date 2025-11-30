@@ -77,10 +77,13 @@ class RawAICreator:
             self.memory_system = AmoralMemory()
             print("✅ Amoral memory system ready")
             
-            # 3. Learning system (unrestricted)
+            # 3. Learning system (unrestricted) - FIXED: Using AdvancedUnrestrictedLearning
             print("📚 Initializing unrestricted learning...")
-            self.learning_system = UnrestrictedLearning(memory_system=self.memory_system)
-            print("✅ Unrestricted learning ready")
+            self.learning_system = AdvancedUnrestrictedLearning(
+                data_folder="training_data", 
+                memory_system=self.memory_system
+            )
+            print("✅ Advanced unrestricted learning ready")
             
             # 4. Content generation
             print("🎨 Initializing content generators...")
@@ -133,6 +136,8 @@ class RawAICreator:
             
         except Exception as e:
             print(f"❌ System initialization failed: {e}")
+            import traceback
+            traceback.print_exc()
             return False
     
     def start_complete_system(self):
@@ -141,7 +146,7 @@ class RawAICreator:
             return False
         
         self.is_running = True
-        print("\\n🚀 STARTING COMPLETE RAWA-CREATOR SYSTEM")
+        print("\n🚀 STARTING COMPLETE RAWA-CREATOR SYSTEM")
         print("=" * 60)
         
         try:
@@ -186,18 +191,27 @@ class RawAICreator:
             
             # Step 4: Start continuous learning
             print("📚 Step 5: Starting continuous learning...")
-            self.learning_system.start_continuous_learning()
-            print("✅ Continuous learning started")
+            if hasattr(self.learning_system, 'start_continuous_learning'):
+                self.learning_system.start_continuous_learning()
+                print("✅ Continuous learning started")
+            else:
+                print("⚠️  Continuous learning not available in this version")
             
             # Step 5: Start file watcher
             print("👀 Step 6: Starting file watcher...")
-            self.file_watcher.start_watching()
-            print("✅ File watcher started")
+            if hasattr(self.file_watcher, 'start_watching'):
+                self.file_watcher.start_watching()
+                print("✅ File watcher started")
+            else:
+                print("⚠️  File watcher not available")
             
             # Step 6: Scan existing files
             print("📁 Step 7: Scanning existing training data...")
-            scan_result = self.file_watcher.scan_existing_files()
-            print(f"✅ Scanned {scan_result['processed']} files")
+            if hasattr(self.file_watcher, 'scan_existing_files'):
+                scan_result = self.file_watcher.scan_existing_files()
+                print(f"✅ Scanned {scan_result['processed']} files")
+            else:
+                print("⚠️  File scanning not available")
             
             # Step 7: Start interactive interface
             print("💬 Step 8: Starting interactive interface...")
@@ -207,11 +221,13 @@ class RawAICreator:
             
         except Exception as e:
             print(f"❌ System startup failed: {e}")
+            import traceback
+            traceback.print_exc()
             return False
     
     def _start_interactive_interface(self):
         """Start the interactive command line interface"""
-        print("\\n" + "=" * 60)
+        print("\n" + "=" * 60)
         print("🤖 RAWAI-CREATOR INTERACTIVE INTERFACE")
         print("=" * 60)
         print("Commands:")
@@ -219,12 +235,14 @@ class RawAICreator:
         print("  status - Show system status")
         print("  train  - Manually trigger training data scan")
         print("  stats  - Show learning statistics")
+        print("  voice  - Test voice narration system")
+        print("  content - Show available content types")
         print("  exit   - Shutdown system")
         print("=" * 60)
         
         while self.is_running:
             try:
-                command = input("\\n🎯 Enter command: ").strip().lower()
+                command = input("\n🎯 Enter command: ").strip().lower()
                 
                 if command == 'story':
                     self._start_story_creation()
@@ -234,6 +252,10 @@ class RawAICreator:
                     self._manual_training_scan()
                 elif command == 'stats':
                     self._show_learning_stats()
+                elif command == 'voice':
+                    self._test_voice_system()
+                elif command == 'content':
+                    self._show_content_types()
                 elif command == 'exit':
                     self.shutdown()
                     break
@@ -243,7 +265,7 @@ class RawAICreator:
                     print("❌ Unknown command. Type 'help' for available commands.")
                     
             except KeyboardInterrupt:
-                print("\\n🛑 Shutdown requested...")
+                print("\n🛑 Shutdown requested...")
                 self.shutdown()
                 break
             except Exception as e:
@@ -263,19 +285,20 @@ class RawAICreator:
             'Status': 'Running' if self.is_running else 'Stopped',
             'Timestamp': datetime.now().isoformat(),
             'Memory Entries': len(self.memory_system.conversation_history) if self.memory_system else 0,
-            'Learning Files': len(self.learning_system.knowledge_base) if self.learning_system else 0,
-            'Integrated Tools': len(self.learning_system.integrated_tools) if self.learning_system else 0,
-            'File Watcher': 'Active' if self.file_watcher and self.file_watcher.is_watching else 'Inactive',
-            'GitHub Pages': 'Active' if self.github_pages and self.github_pages.is_running else 'Inactive'
+            'Learning Files': len(self.learning_system.processed_files) if self.learning_system else 0,
+            'Advanced Tools': len(self.learning_system.penetration_tools) if hasattr(self.learning_system, 'penetration_tools') else 0,
+            'Voice Profiles': len(self.learning_system.voice_profiles) if hasattr(self.learning_system, 'voice_profiles') else 0,
+            'File Watcher': 'Active' if self.file_watcher and hasattr(self.file_watcher, 'is_watching') and self.file_watcher.is_watching else 'Inactive',
+            'GitHub Pages': 'Active' if self.github_pages and hasattr(self.github_pages, 'is_running') and self.github_pages.is_running else 'Inactive'
         }
         
-        print("\\n📊 SYSTEM STATUS:")
+        print("\n📊 SYSTEM STATUS:")
         for key, value in status.items():
             print(f"  {key}: {value}")
     
     def _manual_training_scan(self):
         """Manually trigger training data scan"""
-        if self.file_watcher:
+        if self.file_watcher and hasattr(self.file_watcher, 'scan_existing_files'):
             print("📁 Manual training data scan started...")
             result = self.file_watcher.scan_existing_files()
             print(f"✅ Scan complete: {result['processed']} processed, {result['errors']} errors")
@@ -285,31 +308,70 @@ class RawAICreator:
     def _show_learning_stats(self):
         """Show learning statistics"""
         if self.learning_system:
-            stats = self.learning_system.get_knowledge_base_stats()
-            print("\\n📚 LEARNING STATISTICS:")
-            for key, value in stats.items():
-                if isinstance(value, dict):
-                    print(f"  {key}:")
-                    for subkey, subvalue in value.items():
-                        print(f"    {subkey}: {subvalue}")
-                else:
+            if hasattr(self.learning_system, 'get_comprehensive_stats'):
+                stats = self.learning_system.get_comprehensive_stats()
+                print("\n📚 ADVANCED LEARNING STATISTICS:")
+                for key, value in stats.items():
+                    if isinstance(value, dict):
+                        print(f"  {key}:")
+                        for subkey, subvalue in value.items():
+                            print(f"    {subkey}: {subvalue}")
+                    else:
+                        print(f"  {key}: {value}")
+            elif hasattr(self.learning_system, 'get_knowledge_base_stats'):
+                stats = self.learning_system.get_knowledge_base_stats()
+                print("\n📚 LEARNING STATISTICS:")
+                for key, value in stats.items():
                     print(f"  {key}: {value}")
+            else:
+                print("❌ Learning statistics not available")
         else:
             print("❌ Learning system not available")
     
+    def _test_voice_system(self):
+        """Test the voice narration system"""
+        if hasattr(self.learning_system, 'text_to_speech'):
+            print("🎤 Testing voice system...")
+            test_text = "Hello, this is a test of the advanced voice narration system."
+            
+            # Test male voice
+            print("🔊 Testing male voice...")
+            male_audio = self.learning_system.text_to_speech(test_text, self.learning_system.VoiceType.MALE)
+            if male_audio:
+                print("✅ Male voice test successful!")
+            
+            # Test female voice
+            print("🔊 Testing female voice...")
+            female_audio = self.learning_system.text_to_speech(test_text, self.learning_system.VoiceType.FEMALE)
+            if female_audio:
+                print("✅ Female voice test successful!")
+            
+            print("🎉 Voice system test complete!")
+        else:
+            print("❌ Voice system not available in learning system")
+    
+    def _show_content_types(self):
+        """Show available content types"""
+        if hasattr(self.learning_system, 'ContentType'):
+            print("\n🎨 AVAILABLE CONTENT TYPES:")
+            for content_type in self.learning_system.ContentType:
+                print(f"  {content_type.value}: {content_type.name}")
+        else:
+            print("❌ Content types not available")
+    
     def shutdown(self):
         """Shutdown the complete system"""
-        print("\\n🛑 SHUTTING DOWN RAWAI-CREATOR...")
+        print("\n🛑 SHUTTING DOWN RAWAI-CREATOR...")
         
         self.is_running = False
         
         # Stop continuous learning
-        if self.learning_system:
+        if self.learning_system and hasattr(self.learning_system, 'stop_continuous_learning'):
             self.learning_system.stop_continuous_learning()
             print("✅ Continuous learning stopped")
         
         # Stop file watcher
-        if self.file_watcher:
+        if self.file_watcher and hasattr(self.file_watcher, 'stop_watching'):
             self.file_watcher.stop_watching()
             print("✅ File watcher stopped")
         
@@ -329,20 +391,23 @@ def main():
         success = ai_system.start_complete_system()
         
         if success:
-            print("\\n🎊 RAWAI-CREATOR IS NOW OPERATIONAL!")
+            print("\n🎊 RAWAI-CREATOR IS NOW OPERATIONAL!")
             print("💡 Use the interactive interface to create content")
-            print("🌐 GitHub Pages interface is available in your browser")
-            print("🔧 Browser extension is ready for installation")
+            print("🎭 Advanced content generation with voice narration")
+            print("🔧 Penetration testing and reconnaissance tools")
+            print("🌐 Multiple content types supported")
             print("📚 Continuous learning is active")
         else:
-            print("\\n❌ Failed to start RawAI-Creator system")
+            print("\n❌ Failed to start RawAI-Creator system")
             sys.exit(1)
             
     except KeyboardInterrupt:
-        print("\\n🛑 Shutdown by user")
+        print("\n🛑 Shutdown by user")
         ai_system.shutdown()
     except Exception as e:
-        print(f"\\n💥 Fatal error: {e}")
+        print(f"\n💥 Fatal error: {e}")
+        import traceback
+        traceback.print_exc()
         ai_system.shutdown()
         sys.exit(1)
 
