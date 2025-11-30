@@ -754,10 +754,77 @@ class ExtensionAutoBuilder:
             build_result['ai_analysis'].append(final_analysis)
         
         return build_result
+
+    def build_extension_package(self) -> Dict[str, Any]:
+        """Build extension package - compatibility method for main system"""
+        print("📦 Building extension package (compatibility method)...")
+        
+        try:
+            # Use the existing build_complete_extension method
+            build_result = self.build_complete_extension()
+            
+            # Map the result to expected format
+            package_result = {
+                'status': build_result['status'],
+                'package_path': build_result.get('build_path', ''),
+                'extension_path': build_result.get('install_path', ''),
+                'components': build_result.get('components_created', []),
+                'errors': build_result.get('errors', []),
+                'install_attempted': bool(build_result.get('install_results')),
+                'ai_fixes_applied': build_result.get('fixes_applied', [])
+            }
+            
+            print(f"✅ Extension package built: {package_result['status']}")
+            return package_result
+            
+        except Exception as e:
+            print(f"❌ Package build failed: {e}")
+            return {
+                'status': 'error',
+                'package_path': '',
+                'extension_path': '',
+                'components': [],
+                'errors': [str(e)],
+                'install_attempted': False,
+                'ai_fixes_applied': []
+            }
+
+    def install_extension(self) -> Dict[str, Any]:
+        """Install extension - compatibility method for main system"""
+        print("🔧 Installing extension (compatibility method)...")
+        
+        try:
+            install_results = self.real_auto_install_extension()
+            
+            # Check if any installation was successful
+            successful_installs = [r for r in install_results if r.get('status') == 'success']
+            
+            result = {
+                'status': 'success' if successful_installs else 'partial',
+                'browsers_installed': [r['browser'] for r in successful_installs],
+                'total_attempts': len(install_results),
+                'details': install_results
+            }
+            
+            if successful_installs:
+                print(f"✅ Extension installed to {len(successful_installs)} browser(s)")
+            else:
+                print("⚠️ Extension installation partially completed")
+                
+            return result
+            
+        except Exception as e:
+            print(f"❌ Installation failed: {e}")
+            return {
+                'status': 'error',
+                'browsers_installed': [],
+                'total_attempts': 0,
+                'details': [{'error': str(e)}]
+            }
     
     def real_auto_install_extension(self) -> List[Dict[str, Any]]:
         """Auto-install with comprehensive error recovery"""
-        print("\\n🔧 AI-Powered Auto-Installation Starting...")
+        print("\n🔧 AI-Powered Auto-Installation Starting...")
         
         install_results = []
         extension_path = os.path.abspath(self.extension_dir)
@@ -766,7 +833,7 @@ class ExtensionAutoBuilder:
         available_browsers = self.installer.browser_profiles.keys()
         
         for browser in available_browsers:
-            print(f"\\n📦 Installing to {browser.upper()}...")
+            print(f"\n📦 Installing to {browser.upper()}...")
             try:
                 result = self.installer.install_extension(extension_path, browser)
                 install_results.append(result)
@@ -796,34 +863,34 @@ class ExtensionAutoBuilder:
     
     def _provide_enhanced_manual_instructions(self, extension_path: str, install_results: List[Dict[str, Any]]):
         """Provide AI-enhanced manual instructions"""
-        print("\\n" + "="*80)
+        print("\n" + "="*80)
         print("🤖 AI-ENHANCED MANUAL INSTALLATION REQUIRED")
         print("="*80)
         print(f"📁 Extension Location: {extension_path}")
         
         # AI analysis of installation failures
-        print("\\n🔍 AI ANALYSIS OF INSTALLATION ISSUES:")
+        print("\n🔍 AI ANALYSIS OF INSTALLATION ISSUES:")
         for result in install_results:
             if result['status'] == 'error':
                 print(f"   • {result['browser']}: {', '.join(result['errors'])}")
         
-        print("\\n🛠️ ENHANCED INSTALLATION SOLUTIONS:")
+        print("\n🛠️ ENHANCED INSTALLATION SOLUTIONS:")
         print("1. 🖥️ Standard Method:")
         print("   • Open Chrome/Edge → chrome://extensions/")
         print("   • Enable 'Developer mode' → Click 'Load unpacked'")
         print("   • Select: " + extension_path)
         
-        print("\\n2. 🔧 Advanced Methods:")
+        print("\n2. 🔧 Advanced Methods:")
         print("   • Run browser from command line:")
         print(f"     chrome.exe --load-extension=\"{extension_path}\"")
         print("   • Or use portable browser with extension pre-loaded")
         
-        print("\\n3. 🤖 AI-Suggested Alternatives:")
+        print("\n3. 🤖 AI-Suggested Alternatives:")
         print("   • Try different browser versions")
         print("   • Check browser security settings")
         print("   • Use extension developer tools")
         
-        print("\\n🎯 QUICK START AFTER INSTALLATION:")
+        print("\n🎯 QUICK START AFTER INSTALLATION:")
         print("• Click extension icon → 'Connect' → 'Sync'")
         print("• Right-click pages for AI automation options")
         print("• Use for account creation, data extraction, form filling")
@@ -835,7 +902,6 @@ class ExtensionAutoBuilder:
         except:
             pass
     
-    # [Previous component creation methods remain the same but with enhanced error handling]
     def _create_production_manifest(self):
         """Create production manifest with enhanced error handling"""
         try:
@@ -1207,23 +1273,23 @@ if __name__ == "__main__":
     builder = ExtensionAutoBuilder()
     result = builder.build_complete_extension()
     
-    print(f"\\n🎯 FINAL BUILD RESULT: {result['status'].upper()}")
+    print(f"\n🎯 FINAL BUILD RESULT: {result['status'].upper()}")
     
     if result['ai_analysis']:
-        print("\\n🔍 AI ANALYSIS PERFORMED:")
+        print("\n🔍 AI ANALYSIS PERFORMED:")
         for analysis in result['ai_analysis']:
             if analysis['solutions_applied']:
                 print(f"   • Fixed: {', '.join(analysis['solutions_applied'])}")
     
     if result['install_results']:
-        print("\\n📊 INSTALLATION SUMMARY:")
+        print("\n📊 INSTALLATION SUMMARY:")
         for install in result['install_results']:
             status_icon = "✅" if install.get('status') == 'success' else "❌"
             print(f"   {status_icon} {install['browser']}: {install.get('method', 'unknown')}")
     
     if result['errors']:
-        print("\\n⚠️  ISSUES ENCOUNTERED:")
+        print("\n⚠️  ISSUES ENCOUNTERED:")
         for error in result['errors']:
             print(f"   • {error}")
     
-    print("\\n🚀 Extension building process completed with AI assistance!")
+    print("\n🚀 Extension building process completed with AI assistance!")
